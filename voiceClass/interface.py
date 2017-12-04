@@ -9,9 +9,11 @@ rec2 = voiceid.voiceRec()
 rec3 = voiceid.voiceRec()
 
 rec1.createWav()
+
 #rec2.createWav(2)
 #rec3.createWav(3)
-
+#print (id(rec1.byteData))
+#print (id(rec2.byteData))
 
 
 """

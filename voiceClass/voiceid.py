@@ -13,7 +13,7 @@ class voiceRec:
     RATE = 44100                #частота дискретизации
     RECORD_SECONDS = 3          #
     RECORD_NUM = 0              #количество записанных wav фалов
-    byteData = b''
+    samplesData = []
 
     def __init__(self):
         self.param1 = 0
@@ -41,14 +41,21 @@ class voiceRec:
             data = stream.read(self.CHUNK)
             frames.append(data)
         print("* done recording")
-        
-        voiceRec.byteData = b''.join(frames)  #запись в статическую переменную
-        
+
+        byteData = b''.join(frames) 
+        voiceRec.samplesData = np.fromstring(byteData, dtype=np.int16)    #запись в статическую переменную
+        del byteData
+
         stream.stop_stream()
         stream.close()
         p.terminate()
 
 #####################################################################################
+
+    def noiseReduction (self, samples):
+        for i in range(len(samples)-1):
+            samples[i+1] = (samples[i+1] - 0.9 * samples[i])*(0.54 - 0.46 * np.cos((i+1-6)*2*np.pi/180))
+        return samples
         
     def createWav(self):
         self.recToRam()
@@ -62,12 +69,14 @@ class voiceRec:
         wf.setnchannels(self.CHANNELS)
         wf.setsampwidth(pyaudio.get_sample_size(self.FORMAT))                              # было p.get_sample_size(FORMAT)
         wf.setframerate(self.RATE)
-        wf.writeframes(voiceRec.byteData)
+        wf.writeframes(voiceRec.samplesData)
         wf.close()
 
-        print(len(voiceRec.byteData))
+        print(len(voiceRec.samplesData))
 
-        samples = np.fromstring(voiceRec.byteData, dtype=np.int16)
+        samples = voiceRec.samplesData
+        self.plotSignal(samples)
+        samples = self.noiseReduction(samples)
         self.plotSignal(samples)
         print(np.min(samples))
         print(np.max(samples))
@@ -77,35 +86,34 @@ class voiceRec:
         plt.plot(np.arange(len(samples))/self.RATE, samples)                  # по оси времени секунды
         plt.xlabel('Время, c')                                      
         plt.ylabel('Напряжение, не мВ')
-        plt.title('Сигнал')
+        plt.title('Сигнал ')
         plt.grid(True)
         plt.show()
 
     def plotFFT(self, samples):
 
         ff = np.fft.rfft(samples)
-
         # спектр
         print(ff)
         plt.plot(np.fft.rfftfreq(len(samples), 1./self.RATE), np.abs(ff)/(len(samples)))
 
         freqs = np.fft.rfftfreq(len(samples), 1./self.RATE)
         amps = np.abs(ff)/(len(samples))
+
         # rfftfreq сделает всю работу по преобразованию номеров элементов массива в герцы
         # нас интересует только спектр амплитуд, поэтому используем abs из numpy (действует на массивы поэлементно)
         # делим на число элементов, чтобы амплитуды были в милливольтах, а не в суммах Фурье. 
         # Проверить просто — постоянные составляющие должны совпадать в сгенерированном сигнале и в спектре
+
         plt.xlabel('Частота, Гц')
         plt.ylabel('Напряжение, мВ')
         plt.title('Спектр')
         plt.grid(True)
         plt.show()
 
-
         for i in range(len(ff)):
             if freqs[i] < 300 :
                 ff[i] = 0 + 0j
-
 
         plt.plot(np.fft.rfftfreq(len(samples), 1./self.RATE), np.abs(ff)/(len(samples)))
         plt.xlabel('Частота, Гц')
@@ -116,6 +124,8 @@ class voiceRec:
 
 #########################################################################
         modifRec = np.fft.irfft(ff)
+        print ('длина samples', len(samples))
+        print ('длина modif', len(modifRec))
         self.plotSignal(modifRec)
         self.plotSignal(samples)
 
@@ -123,19 +133,15 @@ class voiceRec:
         bstr1 = "".encode()
         for i in range(0, len(modifRec)):
             bstr1+=int(modifRec[i]).to_bytes(2, byteorder='little', signed = True)
-
-        p = pyaudio.PyAudio()
+        
         wf = wave.open('modif.wav', 'wb')
         wf.setnchannels(self.CHANNELS)
-        wf.setsampwidth(p.get_sample_size(self.FORMAT))
+        wf.setsampwidth(pyaudio.get_sample_size(self.FORMAT))
         wf.setframerate(self.RATE)
         wf.writeframes(bstr1)
         wf.close()
 
-
 ############################################################################
-
-
 
 """
 import pyaudio                                  #импорт библиотек для работы с аудио
