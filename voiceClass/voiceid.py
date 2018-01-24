@@ -3,22 +3,41 @@ import pyaudio
 import wave
 import sys
 import numpy as np  
-import matplotlib.pyplot as plt  
+import matplotlib.pyplot as plt
+
+file = open("params.txt", 'r')
+number = int(file.readline())
+print (number)
+file.close()
+
 
 class voiceRec:
-
+       
     CHUNK = 1024
     FORMAT = pyaudio.paInt16    #2 байта на сэмпл
     CHANNELS = 1
     RATE = 44100                #частота дискретизации
     RECORD_SECONDS = 3          #
-    RECORD_NUM = 0              #количество записанных wav фалов
+    RECORD_NUM = number         #количество записанных wav фалов
     samplesData = []
 
     def __init__(self):
+        self.id = voiceRec.RECORD_NUM * 5
+        voiceRec.RECORD_NUM += 1
+        number = voiceRec.RECORD_NUM
+        self.saveParams(number)
         self.param1 = 0
         self.param2 = 0
         self.param3 = 0
+        self.rec_done = False
+        self.analyse_done = False
+
+    def saveParams(self, number):
+        file = open("params.txt", 'w')
+        #file.truncate()
+        file.write(str(number))
+        file.write("\n")
+        file.close()
 
     def analyseRec(self):
         self.param1 += 1
@@ -26,9 +45,6 @@ class voiceRec:
         self.param3 += 3
 
     def recToRam(self):
-        #####################################
-        voiceRec.RECORD_NUM += 1
-        #####################################
         p = pyaudio.PyAudio()
         stream = p.open(format=self.FORMAT,
                         channels=self.CHANNELS,
