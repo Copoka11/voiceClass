@@ -49,7 +49,7 @@ def onSelect(event):
                   + " | is recorded - " + str(recs[pos].rec_done) 
                   + " | is analised - " + str(recs[pos].analyse_done))
 
-
+#test
     
 
 root = Tk()
