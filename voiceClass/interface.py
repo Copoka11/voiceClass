@@ -1,5 +1,5 @@
-#test
-#githubtest
+
+
 from tkinter import *
 import time
 from random import random as random
@@ -55,19 +55,28 @@ def onSelect(event):
 root = Tk()
 root.title("Voice IDs")
 root.geometry('800x350')
+
 var = StringVar()
 var_param = StringVar()
 
+############################# image #################
 grafImg = Canvas(root, width=200, height = 200)
 grafImg.pack()
 img = PhotoImage(file='res/kitty.gif')
 grafImg.create_image(0, 0, image=img, anchor='nw')
+####################################################
+
+
 
 button1 = Button(root, text="Создать\nзапись", command=button1_clicked)
+
 button2 = Button(root, text=" ")
 button2.configure(text=time.strftime('%H:%M:%S'), command=button2_clicked)
+
 button3 = Button(root, text="color change", command=button3_clicked)
-button4 = Button(text="Спрятать/показать\nнадпись ниже")
+
+button4 = Button(text="Емпту")
+
 recList = Listbox(root)
 label = Label(root, text="null", textvariable=var, anchor=W, bg = '#ccc')     #виджет
 label_params = Label(root, text = "222", textvariable=var_param, anchor=W, bg = "#9cc")
