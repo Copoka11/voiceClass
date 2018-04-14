@@ -5,7 +5,7 @@ import time
 from random import random as random
 import voiceid
 
-recs = []
+recs = voiceid.voiceRecs
 
 """
 #rec1 = voiceid.voiceRec()
@@ -38,6 +38,10 @@ def button3_clicked():
     button3['text'] = button3['bg'] # показываем предыдущий цвет кнопки
     button3['activebackground'] = bg
 
+def button5_clicked():
+    pass
+
+
 def onSelect(event):
     curPos = event.widget.curselection()
     print(curPos, type(curPos))
@@ -67,19 +71,24 @@ grafImg.create_image(0, 0, image=img, anchor='nw')
 
 button1 = Button(root, text="Создать\nзапись", command=button1_clicked)
 
-button2 = Button(root, text=" ")
-button2.configure(text=time.strftime('%H:%M:%S'), command=button2_clicked)
+button2 = Button(root, text="Recs info", command=button2_clicked)
 
 button3 = Button(root, text="color change", command=button3_clicked)
 
 button4 = Button(text="Емпту")
 
-button5 = Button(text="Rec")
+button5 = Button(text="Rec", command=button5_clicked())
+
+
 button6 = Button(text="Anls")
 button7 = Button(text="Play")
 button8 = Button(text="Del")
 
 recList = Listbox(root)
+for i in range(4):
+    recList.insert(END, "record No %r" % recs[i].id)
+
+
 label = Label(root, text="null", textvariable=var, anchor=W, bg = '#ccc')     #виджет
 label_params = Label(root, text = "222", textvariable=var_param, anchor=W, bg = "#9cc")
 
@@ -106,6 +115,6 @@ button8.place(x=720, y=10, width=50, height=30, anchor='nw')
 ######################################################################
 
 
-root.protocol('WM_DELETE_WINDOW', close)
+#root.protocol('WM_DELETE_WINDOW', close)
 root.mainloop()
 

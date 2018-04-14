@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 
 file = open("params.txt", 'r')
 number = int(file.readline())
-print (number)
+print(number)
 file.close()
 
 
@@ -32,6 +32,22 @@ class voiceRec:
         self.rec_done = False
         self.analyse_done = False
 
+#    def __init__(self, id, param1, param2, param3, rec_done, analyse_done):     #для инициализации из фала нужно будет
+#        self.id = id
+#        self.param1 = param1
+#        self.param2 = param2
+#        self.param3 = param3
+#        self.rec_done = rec_done
+#        self.analyse_done
+
+    def initWithParams(self, id, params1, params2, params3, rec_done, analyse_done):
+        self.id = id
+        self.param1 = params1
+        self.param2 = params2
+        self.param3 = params3
+        self.rec_done = rec_done
+        self.analyse_done = analyse_done
+
     def saveParams(self, number):
         file = open("params.txt", 'w')
         #file.truncate()
@@ -43,6 +59,7 @@ class voiceRec:
         self.param1 += 1
         self.param2 += 2
         self.param3 += 3
+
 
     def recToRam(self):
         p = pyaudio.PyAudio()
@@ -273,3 +290,22 @@ stream.close()
 p.terminate()
 
 """
+
+
+voiceRecs = []
+file = open("db.txt", 'r')
+while (1):
+    line = file.readline()
+    if line == "":
+        break
+    params = line.split()
+    print(type(params))
+    print(params)
+    tmp = voiceRec()
+    tmp.initWithParams(params[0], params[1], params[2], params[3], params[4], params[5]) #сделать через args
+    voiceRecs.append(tmp)
+
+print(voiceRecs[1].id)
+
+
+file.close()
