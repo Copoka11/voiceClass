@@ -7,8 +7,6 @@ import voiceid
 
 recs = []
 
-
-
 """
 #rec1 = voiceid.voiceRec()
 #rec2 = voiceid.voiceRec()
@@ -50,7 +48,6 @@ def onSelect(event):
                   + " | is analised - " + str(recs[pos].analyse_done))
 
 #test
-    
 
 root = Tk()
 root.title("Voice IDs")
@@ -77,6 +74,11 @@ button3 = Button(root, text="color change", command=button3_clicked)
 
 button4 = Button(text="Емпту")
 
+button5 = Button(text="Rec")
+button6 = Button(text="Anls")
+button7 = Button(text="Play")
+button8 = Button(text="Del")
+
 recList = Listbox(root)
 label = Label(root, text="null", textvariable=var, anchor=W, bg = '#ccc')     #виджет
 label_params = Label(root, text = "222", textvariable=var_param, anchor=W, bg = "#9cc")
@@ -95,6 +97,11 @@ button4.place(x=115, y=280, width=90, height=50, anchor='nw')
 recList.place(x=220, y=10, width=300, height=200, anchor='nw')
 label.place(x=220, y=220, width=300, height=50, anchor='nw')
 label_params.place(x=220, y=270, width=300, height=50, anchor='nw')
+
+button5.place(x=540, y=10, width=50, height=30, anchor='nw')
+button6.place(x=600, y=10, width=50, height=30, anchor='nw')
+button7.place(x=660, y=10, width=50, height=30, anchor='nw')
+button8.place(x=720, y=10, width=50, height=30, anchor='nw')
 
 ######################################################################
 
