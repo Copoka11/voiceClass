@@ -51,7 +51,6 @@ def onSelect(event):
                   + " | is recorded - " + str(recs[pos].rec_done) 
                   + " | is analised - " + str(recs[pos].analyse_done))
 
-#test
 
 root = Tk()
 root.title("Voice IDs")
@@ -79,13 +78,14 @@ button4 = Button(text="Емпту")
 
 button5 = Button(text="Rec", command=button5_clicked())
 
-
 button6 = Button(text="Anls")
 button7 = Button(text="Play")
 button8 = Button(text="Del")
 
+
+# РЕКЛИСТ
 recList = Listbox(root)
-for i in range(4):
+for i in range(len(recs)):
     recList.insert(END, "record No %r" % recs[i].id)
 
 
@@ -93,8 +93,6 @@ label = Label(root, text="null", textvariable=var, anchor=W, bg = '#ccc')     #�
 label_params = Label(root, text = "222", textvariable=var_param, anchor=W, bg = "#9cc")
 
 recList.bind('<<ListboxSelect>>', onSelect)
-
-
 
 ################### РАЗМЕЩЕНИЕ ВИДЖЕТОВ ##############################
 

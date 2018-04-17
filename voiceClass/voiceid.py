@@ -18,10 +18,10 @@ class voiceRec:
     CHANNELS = 1
     RATE = 44100                #частота дискретизации
     RECORD_SECONDS = 3          #
-    RECORD_NUM = number         #количество записанных wav фалов
+    RECORD_NUM = 0         #количество записанных wav фалов
     samplesData = []
 
-    def __init__(self):
+    def __init__(self):                         #дописать добавление записи в list
         self.id = voiceRec.RECORD_NUM * 5
         voiceRec.RECORD_NUM += 1
         number = voiceRec.RECORD_NUM
@@ -32,14 +32,6 @@ class voiceRec:
         self.rec_done = False
         self.analyse_done = False
 
-#    def __init__(self, id, param1, param2, param3, rec_done, analyse_done):     #для инициализации из фала нужно будет
-#        self.id = id
-#        self.param1 = param1
-#        self.param2 = param2
-#        self.param3 = param3
-#        self.rec_done = rec_done
-#        self.analyse_done
-
     def initWithParams(self, id, params1, params2, params3, rec_done, analyse_done):
         self.id = id
         self.param1 = params1
@@ -48,12 +40,12 @@ class voiceRec:
         self.rec_done = rec_done
         self.analyse_done = analyse_done
 
-    def saveParams(self, number):
-        file = open("params.txt", 'w')
-        #file.truncate()
-        file.write(str(number))
-        file.write("\n")
-        file.close()
+#    def saveParams(self, number):
+#        file = open("params.txt", 'w')
+#        #file.truncate()
+#        file.write(str(number))
+#        file.write("\n")
+#        file.close()
 
     def analyseRec(self):
         self.param1 += 1
@@ -299,13 +291,12 @@ while (1):
     if line == "":
         break
     params = line.split()
-    print(type(params))
+    print("тип", type(params))
     print(params)
     tmp = voiceRec()
     tmp.initWithParams(params[0], params[1], params[2], params[3], params[4], params[5]) #сделать через args
     voiceRecs.append(tmp)
 
 print(voiceRecs[1].id)
-
 
 file.close()
