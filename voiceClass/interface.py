@@ -1,46 +1,49 @@
-
-
 from tkinter import *
 import time
 from random import random as random
 import voiceid
 
-recs = voiceid.voiceRecs
-
-"""
-#rec1 = voiceid.voiceRec()
-#rec2 = voiceid.voiceRec()
-#rec3 = voiceid.voiceRec()
-
-#rec1.createWav()
-
-#rec2.createWav(2)
-#rec3.createWav(3)
-#print (id(rec1.byteData))
-#print (id(rec2.byteData))
-"""
+recs = []
 
 def close():
+    voiceid.saveDB(recs)
     root.destroy()
     root.quit()
 
 def button1_clicked():
-    recs.append(voiceid.voiceRec())
-    recList.insert(END, "record No %r" % recs[len(recs)-1].id)
+    recs.extend(voiceid.loadDB())
+    for i in range(len(recs)):
+        recList.insert(END, "record No %r" % recs[i].id)
+    print(recs)
 
 def button2_clicked():
-    button2['text'] = time.strftime('%H:%M:%S')
+    voiceid.saveDB(recs)
 
 def button3_clicked():
-    bg = '#%0x%0x%0x' % (int(random()*16), int(random()*16), int(random()*16))
-    print(bg)
-    button3['bg'] = bg
-    button3['text'] = button3['bg'] # показываем предыдущий цвет кнопки
-    button3['activebackground'] = bg
+    recs.append(voiceid.voiceRec())
+    recList.insert(END, "record No %r" % recs[-1].id)
+    print(recs)
+
+def button4_clicked():
+    print('var get for graph =', var.get())
+    i = int(var.get())
+    recs[i].plotSignal()
 
 def button5_clicked():
-    pass
+    print('var get for rec =', var.get())
+    i = int(var.get())
+    recs[i].createWav()
+    recs[i].rec_done = True
 
+def button7_clicked():
+    print('var get for play =', var.get())
+    i = int(var.get())
+    recs[i].playRam()
+
+def button9_clicked():
+    print('var get for fur =', var.get())
+    i = int(var.get())
+    recs[i].plotFFT()
 
 def onSelect(event):
     curPos = event.widget.curselection()
@@ -51,12 +54,13 @@ def onSelect(event):
                   + " | is recorded - " + str(recs[pos].rec_done) 
                   + " | is analised - " + str(recs[pos].analyse_done))
 
-
 root = Tk()
 root.title("Voice IDs")
 root.geometry('800x350')
 
+
 var = StringVar()
+var.set('0')
 var_param = StringVar()
 
 ############################# image #################
@@ -66,33 +70,32 @@ img = PhotoImage(file='res/kitty.gif')
 grafImg.create_image(0, 0, image=img, anchor='nw')
 ####################################################
 
+button1 = Button(root, text="Load DB", command=button1_clicked)
 
+button2 = Button(root, text="Save DB", command=button2_clicked)
 
-button1 = Button(root, text="Создать\nзапись", command=button1_clicked)
+button3 = Button(root, text="Создать\nзапись", command=button3_clicked)
 
-button2 = Button(root, text="Recs info", command=button2_clicked)
+button4 = Button(text="Показать\nграфик", command=button4_clicked)
 
-button3 = Button(root, text="color change", command=button3_clicked)
-
-button4 = Button(text="Емпту")
-
-button5 = Button(text="Rec", command=button5_clicked())
+button5 = Button(text="Rec", command=button5_clicked)
 
 button6 = Button(text="Anls")
-button7 = Button(text="Play")
+
+button7 = Button(text="Play", command=button7_clicked)
+
 button8 = Button(text="Del")
+
+button9 = Button(text="Fur\nFur", command=button9_clicked)
 
 
 # РЕКЛИСТ
 recList = Listbox(root)
-for i in range(len(recs)):
-    recList.insert(END, "record No %r" % recs[i].id)
-
+recList.bind('<<ListboxSelect>>', onSelect)
 
 label = Label(root, text="null", textvariable=var, anchor=W, bg = '#ccc')     #виджет
 label_params = Label(root, text = "222", textvariable=var_param, anchor=W, bg = "#9cc")
 
-recList.bind('<<ListboxSelect>>', onSelect)
 
 ################### РАЗМЕЩЕНИЕ ВИДЖЕТОВ ##############################
 
@@ -109,10 +112,11 @@ button5.place(x=540, y=10, width=50, height=30, anchor='nw')
 button6.place(x=600, y=10, width=50, height=30, anchor='nw')
 button7.place(x=660, y=10, width=50, height=30, anchor='nw')
 button8.place(x=720, y=10, width=50, height=30, anchor='nw')
+button9.place(x=720, y=110, width=50, height=30, anchor='nw')
 
 ######################################################################
+button1_clicked()
+root.protocol('WM_DELETE_WINDOW', close)
 
-
-#root.protocol('WM_DELETE_WINDOW', close)
 root.mainloop()
 
