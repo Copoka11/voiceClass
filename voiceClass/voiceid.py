@@ -143,10 +143,10 @@ class voiceRec:
 
     def plotSignalSamples(self, samples):
         #n = np.fromstring(self.samplesData, dtype=np.int16)
-        plt.figure(num='График сигнала')
+        #plt.figure(num='График сигнала')
         plt.plot(np.arange(len(samples))/self.RATE, samples)
         plt.xlabel('Время, c')
-        plt.ylabel('Напряжение')
+        plt.ylabel('Характеристика')
         plt.title('Сигнал')
         plt.grid(True)
         plt.show()
@@ -157,7 +157,7 @@ class voiceRec:
         ff = np.fft.rfft(n)
         # спектр
         print(ff)
-        plt.figure(num='Фурье до фильтра')
+        plt.figure(num='Фурье до/после фильтра')
         plt.plot(np.fft.rfftfreq(len(n), 1./self.RATE), np.abs(ff)/(len(n)))
         freqs = np.fft.rfftfreq(len(n), 1./self.RATE)
         amps = np.abs(ff)/(len(n))
@@ -168,30 +168,24 @@ class voiceRec:
         # Проверить просто — постоянные составляющие должны совпадать в сгенерированном сигнале и в спектре
 
         plt.xlabel('Частота, Гц')
-        plt.ylabel('Напряжение, мВ')
+        plt.ylabel('Преобладание')
         plt.title('Спектр')
         plt.grid(True)
-        plt.show()
 
         for i in range(len(ff)):            #фильтр
-            if freqs[i] < 300 and freqs[i] > 7000 :
+            if freqs[i] < 300:
                 ff[i] = 0 + 0j
 
-        plt.figure(num='Фурье после фильтра')
         plt.plot(np.fft.rfftfreq(len(n), 1./self.RATE), np.abs(ff)/(len(n)))
-        plt.xlabel('Частота, Гц')
-        plt.ylabel('Напряжение, мВ')
-        plt.title('Спектр')
-        plt.grid(True)
         plt.show()
 
 ################################################3
 
-        modifRec = np.fft.irfft(ff)
-        print('длина samples', len(n))
-        print('длина modif', len(modifRec))
-        self.plotSignalSamples(modifRec)
-        self.plotSignalSamples(n)
+        #modifRec = np.fft.irfft(ff)
+        #print('длина samples', len(n))
+        #print('длина modif', len(modifRec))
+        #self.plotSignalSamples(modifRec)
+        #self.plotSignalSamples(n)
 
 #########################################################################
         bstr1 = "".encode()
