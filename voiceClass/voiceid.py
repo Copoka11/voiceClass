@@ -151,12 +151,11 @@ class voiceRec:
         plt.grid(True)
         plt.show()
 
-
     def plotFFT(self):
         n = np.fromstring(self.byteData, dtype=np.int16)
         ff = np.fft.rfft(n)
         # спектр
-        print(ff)
+        # print(ff)
         plt.figure(num='Фурье до/после фильтра')
         plt.plot(np.fft.rfftfreq(len(n), 1./self.RATE), np.abs(ff)/(len(n)))
         freqs = np.fft.rfftfreq(len(n), 1./self.RATE)
@@ -188,9 +187,9 @@ class voiceRec:
         #self.plotSignalSamples(n)
 
 #########################################################################
-        bstr1 = "".encode()
-        for i in range(0, len(modifRec)):
-            bstr1+=int(modifRec[i]).to_bytes(2, byteorder='little', signed = True)
+        #bstr1 = "".encode()
+        #for i in range(0, len(modifRec)):
+        #    bstr1+=int(modifRec[i]).to_bytes(2, byteorder='little', signed = True)
         
         #wf = wave.open('modif.wav', 'wb')
         #wf.setnchannels(self.CHANNELS)
