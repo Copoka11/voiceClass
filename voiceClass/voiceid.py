@@ -45,7 +45,6 @@ class voiceRec:
         self.param2 += 2
         self.param3 += 3
 
-
     def recToRam(self):
         p = pyaudio.PyAudio()
         stream = p.open(format=self.FORMAT,
@@ -86,7 +85,6 @@ class voiceRec:
         voiceRec.byteData = wf.readframes(nframes)
         #voiceRec.samplesData = np.fromstring(byteData, dtype=np.int16)  # запись в статическую переменную
         #del byteData
-
         wf.close()
         #print(voiceRec.samplesData)
 
@@ -150,6 +148,11 @@ class voiceRec:
         plt.title('Сигнал')
         plt.grid(True)
         plt.show()
+
+    def analyseSignal(self):
+        n = np.fromstring(self.byteData, dtype=np.int16)
+        
+        pass
 
     def plotFFT(self):
         n = np.fromstring(self.byteData, dtype=np.int16)

@@ -10,42 +10,42 @@ def close():
     root.destroy()
     root.quit()
 
-def button1_clicked():
+def button1_clicked():                                  #load DB
     recs.extend(voiceid.loadDB())
     for i in range(len(recs)):
         recList.insert(END, "record No %r" % recs[i].id)
     print(recs)
 
-def button2_clicked():
+def button2_clicked():                                  #save DB
     voiceid.saveDB(recs)
 
-def button3_clicked():
+def button3_clicked():                                  #add record 
     recs.append(voiceid.voiceRec())
     recList.insert(END, "record No %r" % recs[-1].id)
     print(recs)
 
-def button4_clicked():
+def button4_clicked():                                  #plot Signal
     print('var get for graph =', var.get())
     i = int(var.get())
     recs[i].plotSignal()
 
-def button5_clicked():
+def button5_clicked():                                  #record wav
     print('var get for rec =', var.get())
     i = int(var.get())
     recs[i].createWav()
     recs[i].rec_done = True
 
-def button7_clicked():
+def button7_clicked():                                  #play wav
     print('var get for play =', var.get())
     i = int(var.get())
     recs[i].playRam()
 
-def button9_clicked():
+def button9_clicked():                                  #fourier
     print('var get for fur =', var.get())
     i = int(var.get())
     recs[i].plotFFT()
 
-def onSelect(event):
+def onSelect(event):                                    #list selection actions
     curPos = event.widget.curselection()
     print(curPos, type(curPos))
     pos = curPos[0]
@@ -53,8 +53,11 @@ def onSelect(event):
     var_param.set("Record No " + str(recs[pos].id) 
                   + " | is recorded - " + str(recs[pos].rec_done) 
                   + " | is analised - " + str(recs[pos].analyse_done))
+    i = int(var.get())
+    recs[i].wavToRam()                                  #usable?
 
-root = Tk()
+
+root = Tk()                                             #
 root.title("Voice IDs")
 root.geometry('800x350')
 
