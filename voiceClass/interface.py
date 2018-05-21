@@ -35,6 +35,11 @@ def button5_clicked():                                  #record wav
     recs[i].createWav()
     recs[i].rec_done = True
 
+def button6_clicked():
+    print('var get for anls =', var.get())
+    i = int(var.get())
+    recs[i].analyseSignal()
+
 def button7_clicked():                                  #play wav
     print('var get for play =', var.get())
     i = int(var.get())
@@ -83,7 +88,7 @@ button4 = Button(text="Показать\nграфик", command=button4_clicked)
 
 button5 = Button(text="Rec", command=button5_clicked)
 
-button6 = Button(text="Anls")
+button6 = Button(text="Anls", command=button6_clicked)
 
 button7 = Button(text="Play", command=button7_clicked)
 

@@ -4,6 +4,7 @@ import wave
 import sys
 import numpy as np  
 import matplotlib.pyplot as plt
+import padasip as pa
 
 #file = open("params.txt", 'r')
 #number = int(file.readline())
@@ -150,8 +151,106 @@ class voiceRec:
         plt.show()
 
     def analyseSignal(self):
-        n = np.fromstring(self.byteData, dtype=np.int16)
+        n = np.fromstring(voiceRec.byteData, dtype=np.int16)        #набор сэмплов
         
+        #### play rec #####
+        p = pyaudio.PyAudio()
+        stream = p.open(format=self.FORMAT,
+                        channels=self.CHANNELS,
+                        rate=self.RATE,
+                        output=True)
+        data = voiceRec.byteData
+        stream.write(data)
+        stream.stop_stream()
+        stream.close()
+        p.terminate()
+        ####
+                
+        #### нормализация   сигнала
+        max = (np.abs(n)).max()
+        print('максимальный сэмпл', max)
+        mean = n.mean()
+        print('mean sample', mean)
+        print(n.dtype)
+
+        mult = (31000/max)
+        n2 = n*mult
+        n2 = n2.astype(np.int16)
+        
+        print('максимальный сэмпл n2', (np.abs(n2)).max())
+        print('mean sample n2', n2.mean())
+        print(n2.dtype)
+        
+        #bstr1 = "".encode()
+        #for i in range(len(n2)):
+        #    bstr1+=int(n2[i]).to_bytes(2, byteorder='little', signed = True)
+        
+        bstr2 = n2.tostring('C')
+
+        print('длины', len(bstr2), len(voiceRec.byteData))
+        ####
+
+        #### шумоподавление самодел
+        # выявить номера "шумных" сэмплов, определить громкость шума, найти именно "шум"
+        # создать шум на основании сэплов, вычесть из сигнала ??? 
+        
+        #f = pa.filters.FilterLMS(n=4, mu=0.01, w="random")
+        
+        #x = np.linspace(0, len(n2))
+        #a = f.run(n2, x)
+
+        # show results
+        
+        #plt.figure(figsize=(15,9))
+        #plt.subplot(211)
+        #plt.title("Adaptation")
+        #plt.xlabel("samples - k")
+        #plt.plot(d,"b", label="d - target")
+        #plt.plot(y,"g", label="y - output")
+        #plt.legend()
+        #plt.subplot(212)
+        #plt.title("Filter error")
+        #plt.xlabel("samples - k")
+        #plt.plot(10*np.log10(e**2),"r", label="e - error [dB]")
+        #plt.legend()
+        #plt.tight_layout()
+        #plt.show()
+        
+        ####
+
+
+        #### play rec #####
+        p = pyaudio.PyAudio()
+        stream = p.open(format=self.FORMAT,
+                        channels=self.CHANNELS,
+                        rate=self.RATE,
+                        output=True)
+        data = bstr2
+        stream.write(data)
+        stream.stop_stream()
+        stream.close()
+        p.terminate()
+        ####
+        
+        
+        
+        ####       
+        #plt.figure(num='График сигнала')
+        #plt.plot(np.arange(len(n))/self.RATE, n)
+        #plt.xlabel('Время, c')
+        #plt.ylabel('Напряжение')
+        #plt.title('Сигнал')
+        #plt.grid(True)
+        #plt.show()   
+
+        print('количество сэмплов =', len(n))
+        
+        #### проход окном шириной 2000 сэмплов 
+        #WINDOW_WIDTH = 2000
+        #for x in range(len(n)//1000):
+        #    pass
+        ####
+
         pass
 
     def plotFFT(self):
